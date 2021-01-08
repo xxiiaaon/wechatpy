@@ -136,15 +136,14 @@ class WeChatOrder(BaseWeChatPayAPI):
         :return: 签名
         """
         data = {
-            "appid": self.appid,
-            "partnerid": self.mch_id,
-            "prepayid": prepay_id,
-            "package": "Sign=WXPay",
-            "timestamp": timestamp or to_text(int(time.time())),
-            "noncestr": nonce_str or random_string(32),
+            "appId": self.appid,
+            "package": "prepay_id={}".format(prepay_id),
+            "timeStamp": timestamp or to_text(int(time.time())),
+            "nonceStr": nonce_str or random_string(32),
+            "signType": "MD5",
         }
         sign = calculate_signature(data, self._client.api_key)
-        data["sign"] = sign
+        data["paySign"] = sign
         return data
 
     def reverse(self, transaction_id=None, out_trade_no=None):
